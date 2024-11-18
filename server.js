@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const app = express();
+const blogSchema = require('./routes/blogs.route')
 
 
 // Connect to MongoDB
@@ -15,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 PORT = process.env.PORT;
 
+//router middleware
+app.use('/api/', blogSchema);
 
 // Default GET endpoint
 app.get('/', (req, res) => {

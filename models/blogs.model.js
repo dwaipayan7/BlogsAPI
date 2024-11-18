@@ -24,10 +24,6 @@ const blogsSchema = new mongoose.Schema({
         type:String
     },
 
-    blogId :{
-        type:mongoose.Schema.Types.ObjectId
-    },
-
     text:{
         type:String
     }

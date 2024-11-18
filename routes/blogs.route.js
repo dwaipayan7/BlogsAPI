@@ -3,50 +3,52 @@ const router = express.Router();
 const Blogs = require("../models/blogs.model.js");
 const { jwtAuthMiddleware, generateToken } = require("../jwt/jwt");
 
+
+
 router.post("/register", async (req, res) => {
-  try {
-    const data = req.body;
-
-    const newBlog = new Blogs(data);
-    const response = await newBlog.save();
-    console.log("Response Data Saved");
-
-    // Generate token
-    const token = generateToken({ email: response.email });
-    console.log("Token:", token);
-
-    // Send a single response
-    res.status(201).json({ response: response, token: token });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "Error Saving Data" });
-  }
-});
-
-router.post("/login", async (req, res) => {
     try {
-      const {email, password} = req.body;
-
-      const user = await Blogs.findOne({email});
-
-      if (!password || !(await user.comparePassword(password))) {
-        return res.status(401).json({message:"Invalid username password"})
-      }
-
-      const payload = {
-        id: user._id,
-        email: user.email,
-      }
-
-      const token = generateToken(payload);
-
-      res.json({token})
-
+      const data = req.body;
+  
+      const newBlog = new Blogs(data);
+      const response = await newBlog.save();
+      console.log("Response Data Saved");
+  
+      // Generate token
+      const token = generateToken({ email: response.email });
+      console.log("Token:", token);
+  
+      // Send a single response
+      res.status(201).json({ response: response, token: token });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error:", error);
+      res.status(500).json({ message: "Error Saving Data" });
     }
   });
+  
+  router.post("/login", async (req, res) => {
+      try {
+        const {email, password} = req.body;
+  
+        const user = await Blogs.findOne({email});
+  
+        if (!password || !(await user.comparePassword(password))) {
+          return res.status(401).json({message:"Invalid username password"})
+        }
+  
+        const payload = {
+          id: user._id,
+          email: user.email,
+        }
+  
+        const token = generateToken(payload);
+  
+        res.json({token})
+  
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    });
 
 router.get("/:id", async (req, res) => {
   try {
